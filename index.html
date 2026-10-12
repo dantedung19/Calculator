@@ -7,14 +7,19 @@
     <style>
       :root {
         color-scheme: light;
-        --bg: #f4f7f5;
-        --card: #ffffff;
-        --ink: #1c2b24;
-        --muted: #5d6f67;
-        --line: #d7e2dc;
-        --accent: #0f7a5a;
-        --accent-soft: #e6f5ef;
-        --shadow: 0 18px 40px rgba(28, 43, 36, 0.08);
+        --bg-1: #0f172a;
+        --bg-2: #1e3a5f;
+        --card: rgba(255, 255, 255, 0.92);
+        --panel: #f4f7fb;
+        --ink: #0f172a;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --accent: #4f46e5;
+        --accent-2: #06b6d4;
+        --accent-soft: #eef2ff;
+        --good: #0f766e;
+        --shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+        --radius: 28px;
       }
 
       * {
@@ -24,60 +29,119 @@
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: Georgia, "Times New Roman", serif;
-        background:
-          radial-gradient(circle at top left, #e9f3ee 0, transparent 40%),
-          var(--bg);
+        font-family: "Segoe UI", Inter, system-ui, sans-serif;
         color: var(--ink);
+        background:
+          radial-gradient(circle at 12% 8%, #38bdf8 0, transparent 28%),
+          radial-gradient(circle at 88% 0%, #818cf8 0, transparent 32%),
+          linear-gradient(160deg, var(--bg-1), var(--bg-2) 55%, #0b1220);
         display: grid;
         place-items: center;
-        padding: 24px;
+        padding: 20px;
+      }
+
+      .shell {
+        width: min(880px, 100%);
+        animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       .card {
-        width: min(440px, 100%);
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 0;
         background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 24px;
+        backdrop-filter: blur(18px);
+        border-radius: var(--radius);
         box-shadow: var(--shadow);
-        padding: 32px 28px;
+      }
+
+      .form {
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+
+      .form,
+      .summary {
+        padding: 36px 32px 44px;
+      }
+
+      .summary {
+        background: linear-gradient(180deg, #1e1b4b, #312e81 70%, #1e3a8a);
+        color: #eef2ff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 28px;
+        min-height: 100%;
+        border-radius: 0 var(--radius) var(--radius) 0;
+        padding: 36px 28px 52px;
       }
 
       h1 {
         margin: 0 0 6px;
-        font-size: 1.8rem;
-        letter-spacing: -0.03em;
+        font-size: clamp(1.6rem, 2vw, 2rem);
+        letter-spacing: -0.04em;
       }
 
-      p.lede {
-        margin: 0 0 24px;
+      .lede {
+        margin: 0 0 28px;
         color: var(--muted);
-        font-size: 0.98rem;
+        line-height: 1.45;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.72rem;
+        color: #a5b4fc;
+      }
+
+      .field {
+        margin-bottom: 20px;
       }
 
       label {
         display: block;
         margin-bottom: 8px;
-        font-size: 0.92rem;
+        font-size: 0.86rem;
+        font-weight: 600;
+        color: #334155;
       }
 
-      .field {
-        margin-bottom: 18px;
+      .input-wrap {
+        position: relative;
+      }
+
+      .prefix {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-weight: 600;
       }
 
       input[type="number"] {
         width: 100%;
-        padding: 12px 14px;
+        padding: 14px 14px 14px 32px;
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 14px;
         font: inherit;
         font-size: 1.05rem;
-        background: #fbfdfc;
+        background: #fff;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      }
+
+      #people,
+      #customTip {
+        padding-left: 14px;
       }
 
       input[type="number"]:focus {
-        outline: 2px solid var(--accent);
-        outline-offset: 1px;
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+        transform: translateY(-1px);
       }
 
       .tips {
@@ -88,135 +152,307 @@
 
       .tips button {
         border: 1px solid var(--line);
-        background: #fbfdfc;
-        border-radius: 10px;
-        padding: 10px 0;
-        font: inherit;
-        cursor: pointer;
-      }
-
-      .tips button.active,
-      .tips button:hover {
-        background: var(--accent-soft);
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-
-      .results {
-        margin-top: 8px;
-        padding-top: 18px;
-        border-top: 1px solid var(--line);
-        display: grid;
-        gap: 10px;
-      }
-
-      .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .row strong {
-        font-size: 1.15rem;
-      }
-
-      .total {
-        padding: 12px 14px;
-        background: var(--accent-soft);
+        background: #fff;
         border-radius: 12px;
+        padding: 12px 0;
+        font: inherit;
+        font-weight: 650;
+        cursor: pointer;
+        transition:
+          background 0.22s ease,
+          color 0.22s ease,
+          border-color 0.22s ease,
+          transform 0.18s ease,
+          box-shadow 0.22s ease;
+      }
+
+      .tips button:hover {
+        transform: translateY(-2px);
+        border-color: #c7d2fe;
+        box-shadow: 0 8px 16px rgba(79, 70, 229, 0.12);
+      }
+
+      .tips button.active {
+        background: linear-gradient(135deg, var(--accent), #6366f1);
+        border-color: transparent;
+        color: #fff;
+        box-shadow: 0 10px 18px rgba(79, 70, 229, 0.28);
+      }
+
+      .custom-wrap {
+        display: grid;
+        grid-template-rows: 0fr;
+        opacity: 0;
+        margin-top: 0;
+        transition: grid-template-rows 0.32s ease, opacity 0.28s ease, margin-top 0.32s ease;
+      }
+
+      .custom-wrap.open {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        margin-top: 12px;
+      }
+
+      .custom-wrap > div {
+        overflow: hidden;
       }
 
       .error {
-        color: #9b2c2c;
+        color: #b91c1c;
         min-height: 1.2em;
-        font-size: 0.9rem;
-        margin: 0 0 8px;
+        font-size: 0.86rem;
+        margin: 0 0 4px;
+        transition: opacity 0.2s ease;
+      }
+
+      .stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .stat:last-of-type {
+        border-bottom: 0;
+      }
+
+      .stat span {
+        color: #c7d2fe;
+        font-size: 0.92rem;
+      }
+
+      .stat strong {
+        font-size: 1.2rem;
+        font-variant-numeric: tabular-nums;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .stat.total {
+        margin-top: auto;
+        padding: 16px 18px;
+        border: 0;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+      }
+
+      .stat.total strong {
+        font-size: 1.7rem;
+        letter-spacing: -0.03em;
+      }
+
+      .pulse {
+        animation: pop 0.28s ease;
+      }
+
+      .people-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .stepper {
+        display: flex;
+        gap: 8px;
+      }
+
+      .stepper button {
+        width: 42px;
+        height: 46px;
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.15s ease;
+      }
+
+      .stepper button:hover {
+        background: var(--accent-soft);
+        transform: scale(1.04);
+      }
+
+      #people {
+        flex: 1;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @keyframes pop {
+        from {
+          transform: scale(0.94);
+          opacity: 0.4;
+        }
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .card {
+          grid-template-columns: 1fr;
+        }
+
+        .form,
+        .summary {
+          padding: 28px 22px 32px;
+        }
+
+        .form {
+          border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .summary {
+          border-radius: 0 0 var(--radius) var(--radius);
+        }
+
+        .tips {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .summary {
+          min-height: 220px;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <h1>Tip calculator</h1>
-      <p class="lede">Enter the bill, pick a tip, and optionally split it.</p>
+    <div class="shell">
+      <main class="card">
+        <section class="form">
+          <h1>Tip calculator</h1>
+          <p class="lede">Enter the bill, choose a tip, and split it in a couple of taps.</p>
 
-      <div class="field">
-        <label for="bill">Bill amount</label>
-        <input id="bill" type="number" min="0" step="0.01" placeholder="0.00" />
-      </div>
+          <div class="field">
+            <label for="bill">Bill amount</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input id="bill" type="number" min="0" step="0.01" placeholder="0.00" />
+            </div>
+          </div>
 
-      <div class="field">
-        <label>Tip percent</label>
-        <div class="tips" id="tips">
-          <button type="button" data-tip="10">10%</button>
-          <button type="button" data-tip="15" class="active">15%</button>
-          <button type="button" data-tip="18">18%</button>
-          <button type="button" data-tip="20">20%</button>
-        </div>
-      </div>
+          <div class="field">
+            <label>Tip percent</label>
+            <div class="tips" id="tips">
+              <button type="button" data-tip="10">10%</button>
+              <button type="button" data-tip="15" class="active">15%</button>
+              <button type="button" data-tip="20">20%</button>
+              <button type="button" data-tip="custom" id="customBtn">Custom</button>
+            </div>
+            <div class="custom-wrap" id="customWrap">
+              <div>
+                <label for="customTip">Custom tip %</label>
+                <input id="customTip" type="number" min="0" step="0.1" placeholder="e.g. 22" />
+              </div>
+            </div>
+          </div>
 
-      <div class="field">
-        <label for="customTip">Custom tip %</label>
-        <input id="customTip" type="number" min="0" step="0.1" placeholder="e.g. 22" />
-      </div>
+          <div class="field">
+            <label for="people">Number of people</label>
+            <div class="people-row">
+              <input id="people" type="number" min="1" step="1" value="1" />
+              <div class="stepper">
+                <button type="button" id="minus" aria-label="Decrease people">−</button>
+                <button type="button" id="plus" aria-label="Increase people">+</button>
+              </div>
+            </div>
+          </div>
 
-      <div class="field">
-        <label for="people">Number of people</label>
-        <input id="people" type="number" min="1" step="1" value="1" />
-      </div>
+          <p class="error" id="error"></p>
+        </section>
 
-      <p class="error" id="error"></p>
-
-      <section class="results" aria-live="polite">
-        <div class="row">
-          <span>Tip</span>
-          <strong id="tipAmount">$0.00</strong>
-        </div>
-        <div class="row total">
-          <span>Total</span>
-          <strong id="total">$0.00</strong>
-        </div>
-        <div class="row">
-          <span>Per person</span>
-          <strong id="perPerson">$0.00</strong>
-        </div>
-      </section>
-    </main>
+        <aside class="summary" aria-live="polite">
+          <div>
+            <p class="eyebrow">Your split</p>
+            <h2 style="margin: 0 0 18px; font-size: 1.35rem; letter-spacing: -0.03em">Totals</h2>
+            <div class="stat">
+              <span>Tip</span>
+              <strong id="tipAmount">$0.00</strong>
+            </div>
+            <div class="stat">
+              <span>Per person</span>
+              <strong id="perPerson">$0.00</strong>
+            </div>
+          </div>
+          <div class="stat total">
+            <span>Total</span>
+            <strong id="total">$0.00</strong>
+          </div>
+        </aside>
+      </main>
+    </div>
 
     <script>
       const billInput = document.getElementById("bill");
       const customTip = document.getElementById("customTip");
+      const customWrap = document.getElementById("customWrap");
       const peopleInput = document.getElementById("people");
       const errorEl = document.getElementById("error");
       const tipButtons = [...document.querySelectorAll("#tips button")];
+      const outputs = {
+        tip: document.getElementById("tipAmount"),
+        total: document.getElementById("total"),
+        per: document.getElementById("perPerson"),
+      };
 
       let selectedTip = 15;
+      let customMode = false;
 
       function money(n) {
         return "$" + n.toFixed(2);
       }
 
+      function setText(el, value) {
+        if (el.textContent === value) return;
+        el.textContent = value;
+        el.classList.remove("pulse");
+        void el.offsetWidth;
+        el.classList.add("pulse");
+      }
+
       function setActive(percent) {
-        selectedTip = percent;
+        customMode = percent === "custom";
+        if (!customMode) selectedTip = Number(percent);
         tipButtons.forEach((btn) => {
-          btn.classList.toggle("active", Number(btn.dataset.tip) === percent);
+          btn.classList.toggle("active", btn.dataset.tip === String(percent));
         });
+        customWrap.classList.toggle("open", customMode);
+        if (customMode) customTip.focus();
+        else customTip.value = "";
       }
 
       function calculate() {
         const bill = Number(billInput.value);
         const people = Number(peopleInput.value);
-        const tipPercent = customTip.value === "" ? selectedTip : Number(customTip.value);
+        const tipPercent = customMode ? Number(customTip.value) : selectedTip;
 
         if (billInput.value === "") {
           errorEl.textContent = "";
-          document.getElementById("tipAmount").textContent = "$0.00";
-          document.getElementById("total").textContent = "$0.00";
-          document.getElementById("perPerson").textContent = "$0.00";
+          setText(outputs.tip, "$0.00");
+          setText(outputs.total, "$0.00");
+          setText(outputs.per, "$0.00");
           return;
         }
 
         if (!(bill >= 0) || Number.isNaN(bill)) {
           errorEl.textContent = "Enter a valid bill amount.";
+          return;
+        }
+
+        if (customMode && customTip.value === "") {
+          errorEl.textContent = "Enter a custom tip percent.";
           return;
         }
 
@@ -233,17 +469,28 @@
         errorEl.textContent = "";
         const tip = bill * (tipPercent / 100);
         const total = bill + tip;
-        document.getElementById("tipAmount").textContent = money(tip);
-        document.getElementById("total").textContent = money(total);
-        document.getElementById("perPerson").textContent = money(total / people);
+        setText(outputs.tip, money(tip));
+        setText(outputs.total, money(total));
+        setText(outputs.per, money(total / people));
       }
 
       tipButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
-          customTip.value = "";
-          setActive(Number(btn.dataset.tip));
+          setActive(btn.dataset.tip);
           calculate();
         });
+      });
+
+      document.getElementById("minus").addEventListener("click", () => {
+        const next = Math.max(1, Number(peopleInput.value || 1) - 1);
+        peopleInput.value = String(next);
+        calculate();
+      });
+
+      document.getElementById("plus").addEventListener("click", () => {
+        const next = Math.max(1, Number(peopleInput.value || 1) + 1);
+        peopleInput.value = String(next);
+        calculate();
       });
 
       [billInput, customTip, peopleInput].forEach((el) => {
